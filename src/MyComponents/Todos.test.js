@@ -1,22 +1,68 @@
-import { render } from '@testing-library/react';
-import ToDoItem from './TodoItem';
+import { render } from "@testing-library/react";
+import Todos from "./Todos";
 
-describe('rendering tests', () => {
-    it('should render todo item', () => {
-        const todoItem = { todo: { task: 'hello title', desc: 'hello description', xyz: '22' } }
+const generateData = () => [
+  {
+    sno: 1,
+    task: "1st task",
+    desc: "desc",
+  },
+  {
+    sno: 2,
+    task: "2nd task",
+    desc: "desc 2",
+  },
+  {
+    sno: 3,
+    task: "3rd task",
+    desc: "desc 3",
+  },
+];
+describe("rendering tests", () => {
+  it("should display no todo message when todos length is 0", () => {
+    const { getByText } = render(<Todos todos={[]} />);
+    expect(getByText("No todos to display")).toBeInTheDocument();
+  });
 
-        const { getByRole, getByText } = render(<ToDoItem {...todoItem} />);
-        const h3 = getByRole('heading');
-        const paragraph = getByText(todoItem.todo.desc);
-        const addButton = getByRole('button');
+  it("should not display no to do message when todos length is not 0", () => {
+    const todoList = generateData();
+    const { queryByText } = render(<Todos todos={todoList} />);
+    expect(queryByText("No todos to display")).not.toBeInTheDocument();
+  });
 
-        expect(h3).toBeInTheDocument();
-        expect(h3.innerHTML).toBe(todoItem.todo.task);
-        expect(paragraph).toBeInTheDocument();
-        expect(paragraph.innerHTML).toBe(todoItem.todo.desc);
-        expect(addButton).toBeInTheDocument();
-        expect(addButton.innerHTML).toBe('Done');
+  it("should render same number of todos as in to do list", () => {
+    const todoList = generateData();
+    const { getAllByTestId, rerender } = render(<Todos todos={todoList} />);
+    let allTodos = getAllByTestId("todo-item");
+    expect(allTodos.length).toBe(3);
+    todoList.push({
+      sno: 4,
+      task: "4th task",
+      desc: "desc 4",
+    });
 
-    })
-})
+    rerender(<Todos todos={todoList} />);
+    allTodos = getAllByTestId("todo-item");
+    expect(allTodos.length).toBe(4);
 
+    todoList.pop();
+    rerender(<Todos todos={todoList} />);
+    allTodos = getAllByTestId("todo-item");
+    expect(allTodos.length).toBe(3);
+  });
+
+  //   it("should show warning in console when key prop is not provided", () => {
+  //     render(<Todos todos={[{ task: "some task", desc: "some desc" }]} />);
+
+  //     const consoleMock = jest.spyOn(global.console, "error");
+
+  //     expect(consoleMock).toHaveBeenCalledTimes(2);
+
+  //     consoleMock.mockRestore();
+
+  //     //expect(allTodos.length).toBe(4);
+  //   });
+
+  //TODO
+  // write test when key prop is not passed
+});

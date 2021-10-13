@@ -1,9 +1,11 @@
 import { render } from '@testing-library/react';
 import ToDoItem from './TodoItem';
 
+
 describe('rendering tests', () => {
     it('should render todo item', () => {
-        const todoItem = { todo: { task: 'hello title', desc: 'hello description' } }
+        const onDeleteMock = jest.fn()
+        const todoItem = { todo: { task: 'hello title', desc: 'hello description', sno: 2 }, onDelete: onDeleteMock }
 
         const { getByRole, getByText } = render(<ToDoItem {...todoItem} />);
         const h3 = getByRole('heading');
@@ -18,5 +20,7 @@ describe('rendering tests', () => {
         expect(addButton.innerHTML).toBe('Done');
 
     })
+
+    //todo: test on delete has been called on delete click
 })
 
