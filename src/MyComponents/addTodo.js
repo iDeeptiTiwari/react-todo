@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types'
 
 export default function AddTodo(props) {
     const [title, setTitle] = useState("");
@@ -7,9 +8,8 @@ export default function AddTodo(props) {
 
 
     const onSubmit = (e) => {
-        console.log("insdeSubmit");
-        e.preventDefault();
 
+        e.preventDefault();
         if (!title || !desc) {
             setIsError(true)
         } else {
@@ -21,14 +21,14 @@ export default function AddTodo(props) {
 
     return (
         <div className="container mx-auto mt-5 p-5 card">
-            {isError && <div class="alert alert-danger align-items-center d-flex justify-content-between" role="alert">
-                <p class="mb-0">Title and description can't be left empty</p>
-                <button onClick={() => setIsError(false)} class="alert-close" type="button" aria-label="Close">&times;</button>
+            {isError && <div className="alert alert-danger align-items-center d-flex justify-content-between" role="alert">
+                <p className="mb-0">Title and description can't be left empty</p>
+                <button onClick={() => setIsError(false)} className="alert-close" type="button" aria-label="Close">&times;</button>
             </div>}
-            <form onSubmit={onSubmit}>
+            <form aria-label="add-form" onSubmit={onSubmit}>
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Task Name</label>
-                    <input type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} className="form-control" id="title" aria-describedby="emailHelp" />
+                    <input type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} className="form-control" id="title" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="desc" className="form-label">Description</label>
@@ -39,4 +39,8 @@ export default function AddTodo(props) {
         </div>
 
     )
+}
+
+AddTodo.propTypes = {
+    addTodo: PropTypes.func.isRequired,
 }

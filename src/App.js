@@ -1,9 +1,9 @@
 // import logo from './logo.svg';
 import './App.css';
-import Header from "./MyComponents/header";
-import Todos from "./MyComponents/todos";
-import AddTodo from "./MyComponents/addTodo";
-import Footer from "./MyComponents/footer";
+import Header from "./MyComponents/Header";
+import Todos from "./MyComponents/Todos";
+import AddTodo from "./MyComponents/AddTodo";
+import Footer from "./MyComponents/Footer";
 import React, { useState, useEffect } from 'react';
 
 
@@ -47,12 +47,12 @@ function App() {
   }, [todos])
 
   return (
-    <>
-      <Header title="MyTodosList" searchBar={false} />
+    <main>
+      <Header title="MyTodosList" />
       <AddTodo addTodo={addTodo} />
       <Todos todos={todos} onDelete={onDelete} />
       <Footer />
-    </>
+    </main>
   );
 }
 
