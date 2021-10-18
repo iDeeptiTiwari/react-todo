@@ -11,7 +11,7 @@ export default function Todos(props) {
     <div className="container mx-auto mt-5" style={mystyle}>
       <h3 className="text-center">Todos List</h3>
       {props.todos.length === 0 ? (
-        <p>No todos to display</p>
+        <p className="text-center">No todos to display</p>
       ) : (
         props.todos.map((todo) => {
           return (
