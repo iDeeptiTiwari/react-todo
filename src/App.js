@@ -15,8 +15,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const onDelete = (todo) => {
-    console.log("I am in onDelete of todo: ", todo);
-
     setTodos(
       todos.filter((e) => {
         return e !== todo;
@@ -25,7 +23,6 @@ function App() {
   };
 
   const addTodo = (task, desc) => {
-    console.log("InsideADDTODO");
     let sno;
     if (todos.length === 0) {
       sno = 0;
