@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import "./App.css";
 import Header from "./MyComponents/Header";
 import Todos from "./MyComponents/Todos";
@@ -7,12 +6,14 @@ import Footer from "./MyComponents/Footer";
 import React, { useState, useEffect } from "react";
 
 function App() {
-  let initTodos;
-  if (localStorage.getItem("todos") === null) {
-    initTodos = [];
-  } else {
-    initTodos = JSON.parse(localStorage.getItem("todos"));
-  }
+  const initTodos = () => {
+    const localTodos = localStorage.getItem("todos");
+    return localTodos ? JSON.parse(localTodos) : [];
+  };
+
+  const [todos, setTodos] = useState(initTodos);
+  const [isLoading, setIsLoading] = useState(false);
+
   const onDelete = (todo) => {
     console.log("I am in onDelete of todo: ", todo);
 
@@ -41,7 +42,21 @@ function App() {
     setTodos([...todos, newTodo]);
   };
 
-  const [todos, setTodos] = useState(initTodos);
+  const addRandomTodo = () => {
+    setIsLoading(true);
+    fetch(
+      `https://jsonplaceholder.typicode.com/posts/${Math.floor(
+        Math.random() * 100 + 1
+      )}`
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        addTodo(res.title, res.body);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false));
+  };
+
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
@@ -49,7 +64,11 @@ function App() {
   return (
     <main>
       <Header title="MyTodosList" />
-      <AddTodo addTodo={addTodo} />
+      <AddTodo
+        isLoading={isLoading}
+        addTodo={addTodo}
+        addRandomTodo={addRandomTodo}
+      />
       <Todos todos={todos} onDelete={onDelete} />
       <Footer />
     </main>

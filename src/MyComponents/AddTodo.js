@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 export default function AddTodo(props) {
+  const { addTodo, addRandomTodo, isLoading } = props;
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [isError, setIsError] = useState(false);
@@ -11,10 +12,15 @@ export default function AddTodo(props) {
     if (!title || !desc) {
       setIsError(true);
     } else {
-      props.addTodo(title, desc);
+      addTodo(title, desc);
       setTitle("");
       setDesc("");
     }
+  };
+
+  const onRandomTodoAdd = (e) => {
+    e.preventDefault();
+    addRandomTodo();
   };
 
   return (
@@ -67,6 +73,16 @@ export default function AddTodo(props) {
         <button type="submit" className="btn btn-success">
           Add
         </button>
+        <button onClick={onRandomTodoAdd} className="btn btn-success">
+          {isLoading && (
+            <span
+              class="spinner-grow spinner-grow-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+          )}
+          Add Random Todo
+        </button>{" "}
       </form>
     </div>
   );
