@@ -15,6 +15,7 @@ export default function AddTodo(props) {
       addTodo(title, desc);
       setTitle("");
       setDesc("");
+      setIsError(false);
     }
   };
 
