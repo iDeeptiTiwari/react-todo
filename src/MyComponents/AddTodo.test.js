@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import AddTodo from "./AddTodo";
 
 let todoFn;
@@ -29,10 +29,10 @@ describe("rendering tests", () => {
   });
 
   it("should render ADD RANDOM TODO button", () => {
-    const { getByText } = render(<AddTodo addTodo={todoFn} />);
-    const button = getByText("Add Random Todo");
+    const { getByRole } = render(<AddTodo addTodo={todoFn} />);
+    const button = getByRole("button", { name: "Add Random Todo" });
     expect(button).toBeInTheDocument();
-  }); //todo
+  });
 });
 
 describe("functinality tests", () => {
@@ -111,5 +111,24 @@ describe("functinality tests", () => {
     expect(todoFn).toHaveBeenCalled();
     expect(todoFn).toHaveBeenCalledWith("hello title", "hello description");
   });
-  //todo test for alert button
+
+  it("should not show error alert when cross button is pressed", async () => {
+    const { queryByRole, findByRole, getByText, getByRole } = render(
+      <AddTodo addTodo={todoFn} />
+    );
+
+    const submitButton = getByText("Add");
+    fireEvent(submitButton, new MouseEvent("click"));
+
+    let alert = await findByRole("alert");
+    expect(alert).toBeInTheDocument();
+
+    const crossButton = getByRole("button", { name: "Close" });
+    expect(crossButton).toBeInTheDocument();
+    fireEvent.click(crossButton);
+
+    await waitFor(() => {
+      expect(queryByRole("alert")).not.toBeInTheDocument();
+    });
+  });
 });

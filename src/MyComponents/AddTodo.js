@@ -33,7 +33,9 @@ export default function AddTodo(props) {
         >
           <p className="mb-0">Title and description can't be left empty</p>
           <button
-            onClick={() => setIsError(false)}
+            onClick={() => {
+              setIsError(false);
+            }}
             className="alert-close"
             type="button"
             aria-label="Close"

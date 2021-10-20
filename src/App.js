@@ -35,7 +35,6 @@ function App() {
       task: task,
       desc: desc,
     };
-    console.log(newTodo);
     setTodos([...todos, newTodo]);
   };
 
