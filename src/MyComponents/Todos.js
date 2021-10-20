@@ -9,7 +9,7 @@ export default function Todos(props) {
 
   return (
     <div className="container mx-auto mt-5" style={mystyle}>
-      <h3 className="text-center">Todos List</h3>
+      <h1 className="text-center">Todos List</h1>
       {props.todos.length === 0 ? (
         <p className="text-center">No todos to display</p>
       ) : (

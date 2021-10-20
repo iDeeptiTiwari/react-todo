@@ -1,6 +1,23 @@
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, within } from "@testing-library/react";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 import App from "./App";
+
+const server = setupServer(
+  rest.get(
+    `https://jsonplaceholder.typicode.com/posts/:postnumber`,
+    (req, res, ctx) => {
+      return res(ctx.json({ title: "my api title", body: "my api body" }));
+    }
+  )
+);
+
 beforeEach(() => global.localStorage.clear());
+beforeAll(() => server.listen());
+
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
 describe("rendering tests", () => {
   it("should renders app component", () => {
     const { getByRole } = render(<App />);
@@ -45,9 +62,9 @@ describe("functionality tests", () => {
     const descInputbox = getByLabelText("Description");
     const submitButton = getByText("Add");
 
-    const allTodos1 = queryAllByTestId("todo-item");
+    const allTodos = () => queryAllByTestId("todo-item");
 
-    expect(allTodos1.length).toBe(0);
+    expect(allTodos().length).toBe(0);
 
     fireEvent.change(descInputbox, {
       target: {
@@ -62,8 +79,8 @@ describe("functionality tests", () => {
     });
 
     fireEvent(submitButton, new MouseEvent("click"));
-    let allTodos2 = queryAllByTestId("todo-item");
-    expect(allTodos2.length).toBe(1);
+
+    expect(allTodos().length).toBe(1);
 
     fireEvent.change(descInputbox, {
       target: {
@@ -78,8 +95,8 @@ describe("functionality tests", () => {
     });
 
     fireEvent(submitButton, new MouseEvent("click"));
-    allTodos2 = queryAllByTestId("todo-item");
-    expect(allTodos2.length).toBe(2);
+
+    expect(allTodos().length).toBe(2);
 
     const deleteButton = getAllByRole("button", { name: "Done" })[0];
     fireEvent.click(deleteButton);
@@ -87,6 +104,15 @@ describe("functionality tests", () => {
     await waitFor(() => {
       expect(queryAllByTestId("todo-item").length).toBe(1);
     });
+  });
+
+  it("should fetch random todo from API when AddRandomTodo button is clicked", async () => {
+    const { getByRole, queryAllByTestId } = render(<App />);
+    const randomtodoButton = getByRole("button", { name: "Add Random Todo" });
+    fireEvent.click(randomtodoButton);
+    const allTodos = () => queryAllByTestId("todo-item");
+
+    await waitFor(() => expect(allTodos().length).toBe(1));
   });
 });
 

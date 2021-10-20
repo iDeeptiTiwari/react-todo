@@ -79,7 +79,7 @@ export default function AddTodo(props) {
         <button onClick={onRandomTodoAdd} className="btn btn-success">
           {isLoading && (
             <span
-              class="spinner-grow spinner-grow-sm"
+              className="spinner-grow spinner-grow-sm"
               role="status"
               aria-hidden="true"
             ></span>
